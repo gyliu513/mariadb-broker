@@ -1,0 +1,6 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ClusterServiceBroker
+metadata:
+  name: mariadb-broker
+spec:
+  url: http://x.x.x.x:8005

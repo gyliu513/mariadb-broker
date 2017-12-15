@@ -1,0 +1,8 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: jpress-mariadb-binding
+spec:
+  instanceRef:
+    name: jpress-mariadb-instance
+  secretName: jpress-mariadb-credentials

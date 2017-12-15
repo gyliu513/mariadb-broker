@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: MARIADB_HOST
+          value: "{{ .Values.mariadb.host }}"
+        - name: MARIADB_PORT
+          value: "{{ .Values.mariadb.port }}"
+        - name: MARIADB_USER
+          value: "{{ .Values.mariadb.user }}"
+        - name: MARIADB_PASS
+          value: "{{ .Values.mariadb.pass }}"
+        livenessProbe:
+          httpGet:
+            path: /v2/catalog
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /v2/catalog
+            port: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
